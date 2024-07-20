@@ -20,6 +20,7 @@ import pandas as pd, sqlite3, sqlalchemy
 import glob, time, dask.dataframe as dd
 import os, sys, zipfile
 
+os.environ['SQLALCHEMY_WARN_20'] = '1'
 dataReferencia = 'xx/xx/2024' #input('Data de referência da base dd/mm/aaaa: ')
 pasta_compactados = r"dados-publicos-zip" #local dos arquivos zipados da Receita
 pasta_saida = r"dados-publicos" #esta pasta deve estar vazia. 
@@ -163,9 +164,16 @@ set cnpj = cnpj_basico||cnpj_ordem||cnpj_dv;
 
 CREATE  INDEX idx_empresas_cnpj_basico ON empresas (cnpj_basico);
 CREATE  INDEX idx_empresas_razao_social ON empresas (razao_social);
+CREATE  INDEX idx_empresas_natureza_juridica ON empresas (natureza_juridica);
+CREATE  INDEX idx_empresas_capital_social ON empresas (capital_social);
 CREATE  INDEX idx_estabelecimento_cnpj_basico ON estabelecimento (cnpj_basico);
 CREATE  INDEX idx_estabelecimento_cnpj ON estabelecimento (cnpj);
 CREATE  INDEX idx_estabelecimento_nomefantasia ON estabelecimento (nome_fantasia);
+CREATE  INDEX idx_estabelecimento_uf ON estabelecimento (uf);
+CREATE  INDEX idx_estabelecimento_municipio ON estabelecimento (municipio);
+CREATE  INDEX idx_estabelecimento_data_inicio_atividades ON estabelecimento (data_inicio_atividades);
+CREATE  INDEX idx_estabelecimento_situacao_cadastral ON estabelecimento (situacao_cadastral);
+CREATE  INDEX idx_estabelecimento_cnae_fiscal ON estabelecimento (cnae_fiscal);
 
 CREATE INDEX idx_socios_original_cnpj_basico
 ON socios_original(cnpj_basico);
@@ -179,6 +187,7 @@ where te.matriz_filial='1';
 DROP TABLE IF EXISTS socios_original;
 
 CREATE INDEX idx_socios_cnpj ON socios(cnpj);
+CREATE INDEX idx_socios_cnpj_basico ON socios(cnpj_basico);
 CREATE INDEX idx_socios_cnpj_cpf_socio ON socios(cnpj_cpf_socio);
 CREATE INDEX idx_socios_nome_socio ON socios(nome_socio);
 CREATE INDEX idx_socios_representante ON socios(representante_legal);
